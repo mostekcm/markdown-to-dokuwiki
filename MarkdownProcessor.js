@@ -22,6 +22,7 @@ function MarkdownProcessor() {
     this.listTypeStack = [];
     this.dokuwikiText = [];
     this.blankLines = 0;
+    this.lineNum = 0;
     this.processingCodeLine = false;
 
     this.headerRe = XRegExp('^\s*(?<hashes>[#]{1,5}) (?<text>.*)$');
@@ -144,6 +145,7 @@ MarkdownProcessor.prototype.processCodeBlock = function (line) {
                 for(var i=0; i<this.blankLines; ++i) {
                     this.dokuwikiText.pop();
                 }
+                this.blankLines = 0;
                 dokuLine = this.dokuwikiText.pop();
                 dokuLine += codeLine;
             } else {
@@ -164,7 +166,7 @@ MarkdownProcessor.prototype.processCodeBlock = function (line) {
  * @return a promise object
  */
 MarkdownProcessor.prototype.processLine = function (line) {
-
+    this.lineNum++;
     var dokuLine = line;
 
     // Before doing anything, if we are in a code block, drop it in!
